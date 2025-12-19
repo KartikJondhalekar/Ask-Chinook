@@ -10,6 +10,20 @@ function App() {
   const onFormSubmit = async (e: any) => {
     e.preventDefault();
     console.log(queryDescription);
+    const query = await generateQuery();
+    setSqlQuery(query);
+  };
+
+  const generateQuery = async () => {
+    const response = await fetch('http://localhost:3000/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ queryDescription: queryDescription }),
+    });
+    const data = await response.json();
+    return data.response;
   };
 
   return (
@@ -26,6 +40,11 @@ function App() {
           onChange={(e) => { setQueryDescription(e.target.value) }} />
         <input type='submit' value='Ask' />
       </form>
+
+      {sqlQuery && <div className={styles.queryOutput}>
+        {sqlQuery}
+      </div>}
+
     </main>
   )
 }
