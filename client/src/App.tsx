@@ -23,7 +23,7 @@ function App() {
       body: JSON.stringify({ queryDescription: queryDescription }),
     });
     const data = await response.json();
-    return data.response;
+    return data.sqlQuery;
   };
 
   return (

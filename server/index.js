@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import generate from './api.js';
 
 const app = express();
 app.use(express.json());
@@ -17,7 +18,14 @@ app.get('/', (req, res) => {
 });
 
 app.post('/generate', async (req, res) => {
-  const { queryDescription } = req.body;
-  console.log(queryDescription);
-  res.json({ answer: `Generated response for query: ${queryDescription}` });
+  try {
+    const { queryDescription } = req.body;
+    const result = await generate(queryDescription);
+    const sqlQuery = result.content || result;
+    console.log(sqlQuery);
+    res.json({ sqlQuery: sqlQuery });
+  } catch (error) {
+    console.log(error);
+    res.json({ sqlQuery: 'Great question!, I am not able to generate a SQL query for it. Could you please provide more details or clarify your question?' });
+  }
 });
